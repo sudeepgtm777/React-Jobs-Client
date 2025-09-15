@@ -4,7 +4,7 @@ import { FaArrowLeft, FaMapMarker } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
 const BACKEND_URL =
-  import.meta.env.VITE_REACT_APP_BACKEND_URL || 'http://localhost:3000';
+  process.env.VITE_REACT_APP_BACKEND_URL || 'http://localhost:3000';
 
 const JobPage = ({ deleteJob }) => {
   const navigate = useNavigate();

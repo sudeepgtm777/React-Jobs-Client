@@ -4,7 +4,7 @@ import JobListing from './JobListing';
 import Spinner from './spinners';
 
 const BACKEND_URL =
-  import.meta.env.VITE_REACT_APP_BACKEND_URL || 'http://localhost:3000';
+  process.env.VITE_REACT_APP_BACKEND_URL || 'http://localhost:3000';
 
 const JobsListing = ({ isHome = false }) => {
   const [jobs, setJobs] = useState([]);
