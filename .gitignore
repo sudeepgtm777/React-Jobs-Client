@@ -1,6 +1,6 @@
 config.env
 .DS_Store
-
+dist/
 # Logs
 logs
 *.log
