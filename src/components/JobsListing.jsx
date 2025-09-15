@@ -3,13 +3,18 @@ import { useState, useEffect } from 'react';
 import JobListing from './JobListing';
 import Spinner from './spinners';
 
+const BACKEND_URL =
+  import.meta.env.VITE_REACT_APP_BACKEND_URL || 'http://localhost:3000';
+
 const JobsListing = ({ isHome = false }) => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchJobs = async () => {
-      const apiUrl = isHome ? '/api/jobs?_limit=3' : '/api/jobs';
+      const apiUrl = isHome
+        ? `${BACKEND_URL}/api/jobs?_limit=3`
+        : `${BACKEND_URL}/api/jobs`;
       try {
         const res = await fetch(apiUrl);
         const data = await res.json();

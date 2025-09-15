@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 
+const BACKEND_URL =
+  import.meta.env.VITE_REACT_APP_BACKEND_URL || 'http://localhost:3000';
+
 const SignUp = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -20,7 +23,7 @@ const SignUp = () => {
     setMessage({ type: '', text: '' });
 
     try {
-      const res = await fetch('/api/v1/users/signup', {
+      const res = await fetch(`${BACKEND_URL}/api/v1/users/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include', // send/receive cookies

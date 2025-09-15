@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import logo from '../assets/images/logo.png';
 
+const BACKEND_URL =
+  import.meta.env.VITE_REACT_APP_BACKEND_URL || 'http://localhost:3000';
+
 const Navbar = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
@@ -10,7 +13,7 @@ const Navbar = () => {
   useEffect(() => {
     const checkLogin = async () => {
       try {
-        const res = await fetch('/api/v1/users/isLoggedIn', {
+        const res = await fetch(`${BACKEND_URL}/api/v1/users/isLoggedIn`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -36,7 +39,7 @@ const Navbar = () => {
   // Handle logout
   const handleLogout = async () => {
     try {
-      await fetch('/api/v1/users/logout', {
+      await fetch(`${BACKEND_URL}/api/v1/users/logout`, {
         method: 'GET',
         credentials: 'include',
       });

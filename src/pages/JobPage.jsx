@@ -3,6 +3,9 @@ import { useParams, useLoaderData, Link, useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaMapMarker } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
+const BACKEND_URL =
+  import.meta.env.VITE_REACT_APP_BACKEND_URL || 'http://localhost:3000';
+
 const JobPage = ({ deleteJob }) => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -111,7 +114,7 @@ const JobPage = ({ deleteJob }) => {
 };
 
 const jobLoader = async ({ params }) => {
-  const res = await fetch(`/api/jobs/${params.id}`); // remove square brackets
+  const res = await fetch(`${BACKEND_URL}/api/jobs/${params.id}`);
   if (!res.ok) throw new Error('Job not found');
   const data = await res.json();
   return data.data.job; // make sure backend returns the job directly
