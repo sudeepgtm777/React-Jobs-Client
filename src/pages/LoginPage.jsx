@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 
 const BACKEND_URL =
-  process.env.VITE_REACT_APP_BACKEND_URL || 'http://localhost:3000';
+  import.meta.env.VITE_REACT_APP_BACKEND_URL || 'http://localhost:3000';
+// const BACKEND_URL = 'http://localhost:3000';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');

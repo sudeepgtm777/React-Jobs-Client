@@ -4,7 +4,8 @@ import JobListing from './JobListing';
 import Spinner from './spinners';
 
 const BACKEND_URL =
-  process.env.VITE_REACT_APP_BACKEND_URL || 'http://localhost:3000';
+  import.meta.env.VITE_REACT_APP_BACKEND_URL || 'http://localhost:3000';
+// const BACKEND_URL = 'http://localhost:3000';
 
 const JobsListing = ({ isHome = false }) => {
   const [jobs, setJobs] = useState([]);
@@ -40,12 +41,10 @@ const JobsListing = ({ isHome = false }) => {
         ) : (
           <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
             {isHome
-              ? jobs.slice(0, 3).map((job) => {
-                  return <JobListing key={job.id} job={job} />;
-                })
-              : jobs.map((job) => {
-                  return <JobListing key={job.id} job={job} />;
-                })}
+              ? jobs
+                  .slice(0, 3)
+                  .map((job) => <JobListing key={job._id} job={job} />)
+              : jobs.map((job) => <JobListing key={job._id} job={job} />)}
           </div>
         )}
       </div>

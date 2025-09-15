@@ -3,7 +3,8 @@ import { NavLink } from 'react-router-dom';
 import logo from '../assets/images/logo.png';
 
 const BACKEND_URL =
-  process.env.VITE_REACT_APP_BACKEND_URL || 'http://localhost:3000';
+  import.meta.env.VITE_REACT_APP_BACKEND_URL || 'http://localhost:3000';
+// const BACKEND_URL = 'http://localhost:3000';
 
 const Navbar = () => {
   const [loggedIn, setLoggedIn] = useState(false);
