@@ -16,10 +16,10 @@ import SignUp from './pages/SignupPage';
 import Login from './pages/LoginPage';
 
 const App = () => {
-  // const API_BASE = import.meta.env.VITE_REACT_APP_BACKEND_URL
-  //   ? `${process.env.VITE_REACT_APP_BACKEND_URL}/api/jobs`
-  //   : 'http://localhost:3000/api/jobs';
-  const API_BASE = 'http://localhost:3000/api/jobs';
+  const API_BASE = import.meta.env.VITE_REACT_APP_BACKEND_URL
+    ? `${process.env.VITE_REACT_APP_BACKEND_URL}/api/jobs`
+    : 'http://localhost:3000/api/jobs';
+  // const API_BASE = 'http://localhost:3000/api/jobs';
 
   // Add new Job
   const addJob = async (newJob) => {
