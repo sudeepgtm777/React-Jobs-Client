@@ -8,6 +8,7 @@ const BACKEND_URL =
 
 const Navbar = () => {
   const { user, setUser } = useContext(UserContext);
+  const navigate = useNavigate();
 
   // Check login state on mount
   useEffect(() => {
