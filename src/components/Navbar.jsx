@@ -41,7 +41,6 @@ const Navbar = () => {
         credentials: 'include',
       });
       setUser(null);
-      setLoggedIn(false);
       navigate('/');
     } catch (err) {
       console.error('Logout failed', err);
