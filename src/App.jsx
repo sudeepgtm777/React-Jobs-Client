@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Route,
   createBrowserRouter,
   createRoutesFromElements,
   RouterProvider,
-  Navigate, // <-- added
+  Navigate,
 } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import UserContext from './context/UserContext';
+
 import HomePage from './pages/HomePage';
 import MainLayout from './layouts/MainLayout';
 import JobsPage from './pages/JobsPage';
@@ -21,59 +22,30 @@ import Login from './pages/LoginPage';
 const BACKEND_URL =
   import.meta.env.VITE_REACT_APP_BACKEND_URL || 'http://localhost:3000';
 
-const ProtectedRoute = ({ children }) => {
-  const [loading, setLoading] = useState(true);
-  const [authorized, setAuthorized] = useState(false);
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const res = await fetch(`${BACKEND_URL}/api/v1/users/me`, {
-          method: 'GET',
-          credentials: 'include',
-        });
-        if (res.status === 401) {
-          toast.info('Please login to continue', { toastId: 'auth-error' });
-          setAuthorized(false);
-        } else {
-          setAuthorized(res.ok);
-        }
-      } catch {
-        setAuthorized(false);
-      } finally {
-        setLoading(false);
-      }
-    };
-    checkAuth();
-  }, []);
-
-  if (loading) return <p>Loading...</p>;
-  if (!authorized) return <Navigate to='/sign-in' replace />;
-  return children;
-};
 const App = () => {
-  const API_BASE = import.meta.env.VITE_REACT_APP_BACKEND_URL
-    ? `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/jobs`
-    : 'http://localhost:3000/api/jobs';
+  const [user, setUser] = useState(null); // ✅ user context state
 
-  // Add new Job
+  const API_BASE = `${BACKEND_URL}/api/jobs`;
+
+  // Add Job
   const addJob = async (newJob) => {
     try {
       const res = await fetch(API_BASE, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
+        credentials: 'include', // include httpOnly cookies
         body: JSON.stringify(newJob),
       });
 
       if (!res.ok) throw new Error('Failed to add job');
       return await res.json();
     } catch (err) {
+      toast.error(err.message || 'Error adding job');
       console.error(err);
     }
   };
 
-  // Delete a Job
+  // Delete Job
   const deleteJob = async (id) => {
     try {
       const res = await fetch(`${API_BASE}/${id}`, {
@@ -83,12 +55,13 @@ const App = () => {
       if (!res.ok) throw new Error('Failed to delete job');
       return true;
     } catch (err) {
+      toast.error(err.message || 'Error deleting job');
       console.error(err);
       return false;
     }
   };
 
-  // Update a Job
+  // Update Job
   const updateJob = async (job) => {
     try {
       const res = await fetch(`${API_BASE}/${job.id}`, {
@@ -100,8 +73,24 @@ const App = () => {
       if (!res.ok) throw new Error('Failed to update job');
       return await res.json();
     } catch (err) {
+      toast.error(err.message || 'Error updating job');
       console.error(err);
     }
+  };
+
+  // ✅ ProtectedRoute component
+  const ProtectedRoute = ({ children }) => {
+    React.useEffect(() => {
+      if (!user) {
+        toast.info('Please login to continue', { toastId: 'auth-error' });
+      }
+    }, [user]);
+
+    if (!user) {
+      return <Navigate to='/sign-in' replace />;
+    }
+
+    return children;
   };
 
   const router = createBrowserRouter(
@@ -127,12 +116,12 @@ const App = () => {
           }
           loader={jobLoader}
         />
-
         <Route
           path='/jobs/:id'
           element={<JobPage deleteJob={deleteJob} />}
           loader={jobLoader}
         />
+
         <Route path='*' element={<NotFoundPage />} />
         <Route path='/sign-up' element={<SignUp />} />
         <Route path='/sign-in' element={<Login />} />
@@ -140,7 +129,11 @@ const App = () => {
     )
   );
 
-  return <RouterProvider router={router} />;
+  return (
+    <UserContext.Provider value={{ user, setUser }}>
+      <RouterProvider router={router} />
+    </UserContext.Provider>
+  );
 };
 
 export default App;

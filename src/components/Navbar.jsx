@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import logo from '../assets/images/logo.png';
+import UserContext from '../context/UserContext';
 
 const BACKEND_URL =
   import.meta.env.VITE_REACT_APP_BACKEND_URL || 'http://localhost:3000';
-// const BACKEND_URL = 'http://localhost:3000';
 
 const Navbar = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
+  const { user, setUser } = useContext(UserContext);
 
   // Check login state on mount
   useEffect(() => {
@@ -18,35 +17,29 @@ const Navbar = () => {
           method: 'GET',
           credentials: 'include',
         });
-
         const data = await res.json();
 
         if (res.ok && data.loggedIn) {
-          setLoggedIn(true);
           setUser(data.user);
         } else {
-          setLoggedIn(false);
           setUser(null);
         }
       } catch (err) {
-        setLoggedIn(false);
         setUser(null);
       }
     };
 
     checkLogin();
-  }, []);
+  }, [setUser]);
 
-  // Handle logout
   const handleLogout = async () => {
     try {
       await fetch(`${BACKEND_URL}/api/v1/users/logout`, {
         method: 'GET',
         credentials: 'include',
       });
-      setLoggedIn(false);
       setUser(null);
-      window.location.href = '/'; // redirect home
+      window.location.href = '/';
     } catch (err) {
       console.error('Logout failed', err);
     }
@@ -79,13 +72,12 @@ const Navbar = () => {
                 <NavLink to='/add-job' className={LinkClass}>
                   Add Job
                 </NavLink>
-                {loggedIn ? (
+
+                {user ? (
                   <>
-                    {/* Show first name */}
                     <span className='bg-green-500 hover:bg-green-700 text-white rounded-md px-3 py-2 cursor-pointer'>
-                      {user?.name?.split(' ')[0]}
+                      {user.name.split(' ')[0]}
                     </span>
-                    {/* Sign out button */}
                     <button
                       onClick={handleLogout}
                       className={LinkClass({ isActive: false })}
