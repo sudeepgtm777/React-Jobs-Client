@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import logo from '../assets/images/logo.png';
 import UserContext from '../context/UserContext';
 
@@ -32,14 +32,17 @@ const Navbar = () => {
     checkLogin();
   }, [setUser]);
 
-  const handleLogout = async () => {
+  const handleLogout = async (e) => {
+    e.preventDefault();
+
     try {
       await fetch(`${BACKEND_URL}/api/v1/users/logout`, {
         method: 'GET',
         credentials: 'include',
       });
       setUser(null);
-      window.location.href = '/';
+      setLoggedIn(false);
+      navigate('/');
     } catch (err) {
       console.error('Logout failed', err);
     }
